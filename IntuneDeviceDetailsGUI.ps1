@@ -31,6 +31,9 @@
 .PARAMETER OutputFolder
 	Custom folder path for saving generated HTML reports. Defaults to 'reports' subfolder.
 
+.PARAMETER AccessToken
+	Pre-obtained Microsoft Graph API access token. If not provided, the script will attempt to authenticate using the Microsoft.Graph.Authentication module.
+
 .EXAMPLE
 	.\IntuneDeviceDetailsGUI.ps1
 
@@ -3171,8 +3174,7 @@ function Initialize-IntuneSession {
 	if (-not $AccessToken) {
 		$null = Connect-MgGraph -Scopes $scopes
 	} else {
-		$secureToken = ConvertTo-SecureString $AccessToken -AsPlainText -Force
-		$null = Connect-MgGraph -AccessToken $secureToken
+		$null = Connect-MgGraph -AccessToken (ConvertTo-SecureString $AccessToken -AsPlainText -Force)
 	}
 
 	$context = Get-MgContext
